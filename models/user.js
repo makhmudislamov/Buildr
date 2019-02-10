@@ -3,8 +3,8 @@ const bcrypt = require('bcryptjs');
 const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
-    createdAt:  { type: Date},
-    updatedAt:  { type: Date},
+    createdAt:  { type: Date },
+    updatedAt:  { type: Date },
     username:   { type: String, required: true },
     password:   { type: String, required: true },
 })
@@ -32,10 +32,10 @@ UserSchema.pre('save', function(next) {
 });
 
 // Need to use function to enable this.password to work.
-UserSchema.methods.comparePassword = function(password, done) {
+UserSchema.methods.verifyPassword = function(password, done) {
   bcrypt.compare(password, this.password, (err, isMatch) => {
     done(err, isMatch);
   });
 };
 
-module.exports = ('User', UserSchema);
+module.exports = mongoose.model('User', UserSchema);
