@@ -14,10 +14,7 @@ module.exports = (app) => {
     })
 
     app.post('/sign-up', (req, res) => {
-        var user = new User()
-
-        user.username = req.body.username
-        user.password = req.body.password
+        var user = new User(req.body)
 
         user
             .save()
@@ -39,7 +36,5 @@ module.exports = (app) => {
             })
         }
     })
-
-
 
 }

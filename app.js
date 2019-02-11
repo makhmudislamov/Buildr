@@ -38,8 +38,10 @@ app.use(session({
     }
 }));
 
+require('./passport')(passport);
 app.use(passport.initialize());
 app.use(passport.session());
+
 
 // CONTROLLERS
 require('./controllers/users')(app);
