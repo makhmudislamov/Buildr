@@ -5,6 +5,8 @@ const Project = require('../models/project')
 
 module.exports = (app) => {
 
+
+        
     app.get('/user/:id', async (req, res) => {
 
         user = await User.findById(req.params.id)

@@ -5,27 +5,39 @@ const should = chai.should();
 const Project = require('../models/project');
 
 chai.use(chaiHttp);
+const agent = chai.request.agent(server);
 
 const sampleProject = {
-    'title': 'Tinder for dog owners',
-    'description': 'App that allows not only people but also their dogs to find their love',
-    'developerNeeded': 'Front End, Back End, IOS app developer',
-    'author': 'dwayne123'
+    title: 'Tinder for dog owners',
+    description: 'App that allows not only people but also their dogs to find their love',
+    developerNeeded: 'Front End, Back End, IOS app developer',
+    author: 'dwayne123'
 }
+const user = { username: 'dwayne123', password: 'dwaynespass' }
 
 describe('Projects', () => {
 
+    before((done) => {
+            agent
+            .post('/login')
+            .send(user)
+            .end((err, res) => {
+                done();
+            })
+
+    })
+
     after(() => {
-        Project.deleteMany({ title: 'LinkedIn for Idiots' }).exec((err, projects) => {
+        Project.deleteMany({title: 'Test Title'}).exec((err, projects) => {
             console.log(projects)
-            projects.remove();
+            return projects.remove();
         })
     });
 
     // TEST INDEX
-    it('should index ALL projects on / GET', (done) => {
-        chai.request(server)
-            .get('/ideas')
+    it('should index ALL projects on /projects GET', (done) => {
+            agent
+            .get('/projects')
             .end((err, res) => {
                 res.should.have.status(200);
                 res.should.be.html;
@@ -35,7 +47,7 @@ describe('Projects', () => {
 
     // TEST NEW
     it('should display new form on /projects/new GET', (done) => {
-        chai.request(server)
+            agent
             .get(`/projects/new`)
             .end((err, res) => {
                 res.should.have.status(200);
@@ -46,7 +58,7 @@ describe('Projects', () => {
 
     // TEST CREATE
     it('should create a SINGLE project on /ideas POST', (done) => {
-        chai.request(server)
+            agent
             .post('/projects')
             .send(sampleProject)
             .end((err, res) => {
@@ -60,7 +72,7 @@ describe('Projects', () => {
     it('should show a SINGLE project on /projects/<id> GET', (done) => {
         var project = new Project(sampleProject);
         project.save((err, data) => {
-            chai.request(server)
+                agent
                 .get(`/projects/${data._id}`)
                 .end((err, res) => {
                     res.should.have.status(200);
@@ -74,7 +86,7 @@ describe('Projects', () => {
     it('should edit a SINGLE project on /projects/<id>/edit GET', (done) => {
         var project = new Project(sampleProject);
         project.save((err, data) => {
-            chai.request(server)
+                agent
                 .get(`/projects/${data._id}/edit`)
                 .end((err, res) => {
                     res.should.have.status(200);
@@ -88,7 +100,7 @@ describe('Projects', () => {
     it('should update a SINGLE project on /projects/<id> PUT', (done) => {
         var project = new Project(sampleProject);
         project.save((err, data) => {
-            chai.request(server)
+                agent
                 .put(`/projects/${data._id}?_method=PUT`)
                 .send({ 'title': 'Updating the title' })
                 .end((err, res) => {
@@ -103,7 +115,7 @@ describe('Projects', () => {
     it('should delete a SINGLE project on /projects/<id> DELETE', (done) => {
         var project = new Project(sampleProject);
         project.save((err, data) => {
-            chai.request(server)
+                agent
                 .delete(`/projects/${data._id}?_method=DELETE`)
                 .end((err, res) => {
                     res.should.have.status(200);

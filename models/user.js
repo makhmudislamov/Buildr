@@ -7,6 +7,8 @@ const UserSchema = new Schema({
     updatedAt:  { type: Date },
     username:   { type: String, required: true, unique: true },
     password:   { type: String, required: true },
+    // associating projects to user
+    projects: [{ type: Schema.Types.ObjectId, ref: 'Project' }]
 })
 
 // Must use function here! ES6 => functions do not bind this!
