@@ -13,4 +13,12 @@ module.exports = (app) => {
             user,
         })
     })
+
+    app.get('/edit/user/:id', async (req, res) => {
+
+    })
+
+    app.delete('/user/delete', async (req, res) => {
+
+    })
 }
