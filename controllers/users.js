@@ -1,5 +1,8 @@
 const express = require('express')
 
+const User = require('../models/user')
+const Project = require('../models/project')
+
 module.exports = (app) => {
 
     app.get('/user/:id', async (req, res) => {
@@ -10,10 +13,4 @@ module.exports = (app) => {
             user,
         })
     })
-
-    app.get('/edit/:id', async (req, res) => {
-
-    })
-
-    app.get('')
 }
